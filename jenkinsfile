@@ -1,32 +1,12 @@
-pipeline {
-    agent any
+node {
 
-    stages {
-        stage ('Compile Stage') {
+checkout scm
 
-            steps {
-                withMaven(maven : 'maven3') {
-                    sh 'mvn clean compile'
-                }
-            }
-        }
+docker.withRegistry('https://registry.hub.docker.com', 'Dockerid') {
 
-        stage ('Testing Stage') {
-
-            steps {
-                withMaven(maven : 'maven3') {
-                    sh 'mvn test'
-                }
-            }
-        }
-
-
-        stage ('Deployment Stage') {
-            steps {
-                withMaven(maven : 'maven3') {
-                    sh 'mvn deploy'
-                }
-            }
-        }
+   def dockerimage = docker.build("bouchtateam/petclinicpipeline")
+   
+   dockerimage.push()
     }
+
 }
