@@ -1,6 +1,7 @@
 node {
+    stage {
     checkout scm
-    
+    }
  
     stage('maven compile'){
         def mavenHOME = tool name: 'maven3', type: 'maven'
@@ -9,11 +10,12 @@ node {
     }
 
 
-docker.withRegistry('https://registry.hub.docker.com', 'Dockerid') {
+    stage('push image '){
+        docker.withRegistry('https://registry.hub.docker.com', 'Dockerid') {
 
-   def dockerimage = docker.build("bouchtateam/petclinicpipeline")
+        def dockerimage = docker.build("bouchtateam/petclinicpipeline")
    
-   dockerimage.push()
+        dockerimage.push()
     }
-
+   }
 }
