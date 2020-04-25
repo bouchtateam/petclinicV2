@@ -6,7 +6,7 @@ node {
   
         def mavenHOME = tool name: 'maven3', type: 'maven'
         def mavenCMD = "${mavenHOME}/bin/mvn"
-        sh "${mavenCMD} clean package"
+        bat "${mavenCMD} clean package"
     
 
 
