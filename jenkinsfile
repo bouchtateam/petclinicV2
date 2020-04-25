@@ -1,6 +1,6 @@
 node {
     
-        // checkout scm
+        checkout scm
         git credentialsId: 'Gitlab_CredToken', url: 'http://192.168.10.10/bouchtateam/petclinic'
         
         def mavenHOME = tool name: 'maven3', type: 'maven'
