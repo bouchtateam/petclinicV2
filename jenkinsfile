@@ -1,20 +1,12 @@
 node {
     
     checkout scm
-    
- 
-  
         def mavenHOME = tool name: 'maven3', type: 'maven'
         def mavenCMD = "${mavenHOME}/bin/mvn"
         bat "${mavenCMD} clean package"
     
-
-
-    
         docker.withRegistry('https://registry.hub.docker.com', 'Dockerid') {
-
         def dockerimage = docker.build("bouchtateam/petclinicpipeline")
-   
         dockerimage.push()
     }
    
