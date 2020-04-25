@@ -1,6 +1,8 @@
 node {
     
-    checkout scm
+        // checkout scm
+        git credentialsId: 'Gitlab_CredToken', url: 'http://192.168.10.10/bouchtateam/petclinic'
+        
         def mavenHOME = tool name: 'maven3', type: 'maven'
         def mavenCMD = "${mavenHOME}/bin/mvn"
         bat "${mavenCMD} clean package"
@@ -8,6 +10,7 @@ node {
         docker.withRegistry('https://registry.hub.docker.com', 'Dockerid') {
         def dockerimage = docker.build("bouchtateam/petclinicpipeline")
         dockerimage.push()
-    }
+        }
+   
    
 }
