@@ -1,21 +1,21 @@
 node {
-    stage {
+    
     checkout scm
-    }
+    
  
-    stage('maven compile'){
+  
         def mavenHOME = tool name: 'maven3', type: 'maven'
         def mavenCMD = "${mavenHOME}/bin/mvn"
         sh "${mavenCMD} clean package"
-    }
+    
 
 
-    stage('push image '){
+    
         docker.withRegistry('https://registry.hub.docker.com', 'Dockerid') {
 
         def dockerimage = docker.build("bouchtateam/petclinicpipeline")
    
         dockerimage.push()
     }
-   }
+   
 }
