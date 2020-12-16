@@ -1,16 +1,18 @@
 node {
     
         checkout scm
-        git credentialsId: 'Gitlab_CredToken', url: 'http://192.168.10.10/bouchtateam/petclinic'
+        git credentialsId: 'Gitlab_CredToken', url: 'https://github.com/bouchtateam/petclinic'
         
         def mavenHOME = tool name: 'maven3', type: 'maven'
         def mavenCMD = "${mavenHOME}/bin/mvn"
-        bat "${mavenCMD} clean package"
+        sh "${mavenCMD} clean package"
     
         docker.withRegistry('https://registry.hub.docker.com', 'Dockerid') {
         def dockerimage = docker.build("bouchtateam/petclinicpipeline")
         dockerimage.push()
-        }
-   
-   
-}
+         }
+        sh "docker ps -q --filter name=mysql | grep -q . && docker rm -f  mysql"
+        sh "docker run --rm -d --name mysql -e MYSQL_ROOT_PASSWORD=\"petclinic\" -e MYSQL_DATABASE=\"petclinic\" -e MYSQL_USER=\"petclinic\"   -e MYSQL_PASSWORD=\"petclinic\" -v $PWD/mysql_volume:/var/lib/mysql   -p 3306:3306 mysql:8.0"
+        sh "docker ps -q --filter name=petclinic2020 | grep -q . && docker rm -f  petclinic2020"
+        sh "docker run --rm -d -p 7070:8080 --name petclinic2020 --link mysql:mysql  bouchtateam/petclinicpipeline:latest"
+   }
